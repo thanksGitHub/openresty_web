@@ -5,7 +5,7 @@
 ##快速实践一,节约成本的前提的下多个域名使用同一个ip
 原理:根据请求中带有的hostname进行判断将不同域名映射到不同的location中,当然这个很多时候就是做实验使用的    
          local name=ngx.var.host  
-         if name=="mobile.yidaren.top" then  
+         if name=="xxx.xxxxxx.xxx" then  
              return ngx.redirect("/index.html");  
          else  
              ngx.exec("/logs");  
@@ -16,6 +16,6 @@
 + 开启https  
          # listen       443;  
          # ssl on;  
-         # ssl_certificate key/1_mobile.yidaren.top_bundle.crt;  
-         # ssl_certificate_key key/mobile.yidaren.top.key;  
+         # ssl_certificate key/1_mobile.zzz.zzzz.zz.crt;  
+         # ssl_certificate_key key/zzz.xxx.ccc.key;  
       
