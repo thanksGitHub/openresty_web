@@ -1,0 +1,3 @@
+#openresty_web
+这是一个内部分享使用openresty搭建的一个简单web服务器主要目的还是为了展示openresty的一些用法
+
