@@ -11,12 +11,11 @@
              ngx.exec("/logs");  
           end  
 ##快速实践二,快速搭建一个https网站(单域名的情况下)
-+1. 申请证书
-+2. 上传证书到nginx的目录下
-+3. 开启https
-      "
-      # listen       443;
-      # ssl on;
-      # ssl_certificate key/1_mobile.yidaren.top_bundle.crt;
-      # ssl_certificate_key key/mobile.yidaren.top.key;
-      "
++ 申请证书  
++ 上传证书到nginx的目录下  
++ 开启https  
+         # listen       443;  
+         # ssl on;  
+         # ssl_certificate key/1_mobile.yidaren.top_bundle.crt;  
+         # ssl_certificate_key key/mobile.yidaren.top.key;  
+      
