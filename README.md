@@ -33,3 +33,7 @@
  	return sock
  	sock:send("日志信息")
 
+##根据openresty的一些特性进行对Nginx的监视处理
+![MacDown logo](https://cloud.githubusercontent.com/assets/2137369/15272097/77d1c09e-1a37-11e6-97ef-d9767035fc3e.png)
+
+根据上图，如果我们要对work进行监控的话，我们就可以在__init_work_by_lua*__阶段进行各种操作。如果只是对心跳检测建议可以是用_ngx.socket.udp_,如果是对一些信息做一些交换，建议使用_resty-http_模块，如果是对配置信息定时做一些调整，有_resty-redis_，或_resty-memcache_等。
