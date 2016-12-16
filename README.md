@@ -37,3 +37,65 @@
 ![MacDown logo](https://cloud.githubusercontent.com/assets/2137369/15272097/77d1c09e-1a37-11e6-97ef-d9767035fc3e.png)
 
 根据上图，如果我们要对work进行监控的话，我们就可以在__init_work_by_lua*__阶段进行各种操作。如果只是对心跳检测建议可以是用_ngx.socket.udp_,如果是对一些信息做一些交换，建议使用_resty-http_模块，如果是对配置信息定时做一些调整，有_resty-redis_，或_resty-memcache_等。
+
+    local http   = require "resty.http.simple"
+	local new_timer = ngx.timer.at
+  	function request()
+     local res, err = http.request("204.236.225.73", 80, {
+      headers = { Cookie = "foo=bar"} })
+      if not res then
+         ngx.log(ngx.ERR, "http failure: ", err)
+        return
+      end
+
+      if res.status >= 200 and res.status < 300 then
+        ngx.log(ngx.ERR,"My IP is: " .. res.body)
+      else
+        ngx.log(ngx.ERR,"Query returned a non-200 response: " .. res.status)
+      end
+  	end
+
+  	local function get_task()
+      local res, err =new_timer(0, request)
+      if not res then
+         ngx.log(ngx.ERR, "http failure:")
+        return
+      end
+      -- new_timer(3,get_task)
+  	end
+ 	get_task()
+
+##balance_by_lua对upstream进行动态更换，在不重启的情况下
+
+####开始实践：
+
+	upstream backend {
+        server 127.0.0.1:8080;
+          balancer_by_lua_block {
+            local balancer = require "ngx.balancer"
+            local host = "127.0.0.1"
+            local port = 10000
+            //在这个之间可以设置各种负载算法，而且，还可以使用共享内存的方式的进行动态修改
+            local ok, err = balancer.set_current_peer(host, port)
+            if not ok then
+                ngx.log(ngx.ERR, "failed to set the current peer: ", err)
+               return ngx.exit(500)
+            end
+        }
+
+    }
+    server {
+        listen 8090;
+        location / {
+	      proxy_pass http://backend;
+        }
+	}
+
+   	server {
+        listen 10000;
+        location / {
+            echo "this is a faker";
+        }
+    }
+
+
